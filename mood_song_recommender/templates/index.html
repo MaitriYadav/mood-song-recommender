@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MoodBeats - Bollywood Edition</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            /* Light Theme Colors */
+            --primary: #6200ea;
+            --primary-light: #9d46ff;
+            --primary-dark: #0a00b6;
+            --secondary: #ff6d00;
+            --bg-main: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            --bg-card: #ffffff;
+            --text-primary: #212121;
+            --text-secondary: #757575;
+            --border-color: #e0e0e0;
+            --slider-bg: #ddd;
+            --shadow-color: rgba(0, 0, 0, 0.1);
+            --shadow-hover: rgba(0, 0, 0, 0.15);
+        }
+        
+        [data-theme="dark"] {
+            /* Dark Theme Colors */
+            --primary: #bb86fc;
+            --primary-light: #e2b8ff;
+            --primary-dark: #8559da;
+            --secondary: #ff9e40;
+            --bg-main: linear-gradient(135deg, #2d3748 0%, #1a202c 100%);
+            --bg-card: #2d3748;
+            --text-primary: #f5f5f5;
+            --text-secondary: #cbd5e0;
+            --border-color: #4a5568;
+            --slider-bg: #4a5568;
+            --shadow-color: rgba(0, 0, 0, 0.3);
+            --shadow-hover: rgba(0, 0, 0, 0.4);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg-main);
+            min-height: 100vh;
+            padding: 30px 15px;
+            color: var(--text-primary);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            position: relative;
+            padding: 0 20px;
+        }
+        
+        .header-left {
+            text-align: center;
+        }
+        
+        .theme-toggle {
+            background: var(--bg-card);
+            border-radius: 50px;
+            padding: 5px 15px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 5px 15px var(--shadow-color);
+        }
+        
+        .theme-toggle i {
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin: 0 5px;
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .logo-icon {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-right: 15px;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        .logo {
+            font-size: 3rem;
+            font-weight: 800;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 5px;
+        }
+        
+        .tagline {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            margin-bottom: 10px;
+        }
+        
+        .cards-container {
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+        
+        .form-container {
+            background: var(--bg-card);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px var(--shadow-color);
+            max-width: 600px;
+            margin: 0 auto;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .form-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+        }
+        
+        .form-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px var(--shadow-hover);
+        }
+        
+        .form-title {
+            font-size: 1.8rem;
+            margin-bottom: 30px;
+            text-align: center;
+            color: var(--primary);
+            font-weight: 700;
+        }
+        
+        .form-group {
+            margin-bottom: 30px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 12px;
+            font-weight: 500;
+            color: var(--text-primary);
+            font-size: 1.1rem;
+        }
+        
+        .slider-container {
+            position: relative;
+            padding: 10px 0;
+        }
+        
+        input[type="range"] {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 8px;
+            border-radius: 8px;
+            background: var(--slider-bg);
+            outline: none;
+            margin: 10px 0;
+        }
+        
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--primary);
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 0 10px rgba(0,0,0,0.2);
+        }
+        
+        input[type="range"]::-webkit-slider-thumb:hover {
+            background: var(--primary-dark);
+            transform: scale(1.2);
+        }
+        
+        .range-values {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-top: 10px;
+        }
+        
+        .value-display {
+            text-align: center;
+            font-weight: 600;
+            color: var(--primary);
+            font-size: 1.5rem;
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .value-display-icon {
+            margin-right: 10px;
+        }
+        
+        button {
+            width: 100%;
+            background: linear-gradient(45deg, var(--primary), var(--primary-light));
+            color: white;
+            border: none;
+            padding: 16px;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(98, 0, 234, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        button i {
+            margin-left: 10px;
+            font-size: 1.2rem;
+        }
+        
+        button:hover {
+            background: linear-gradient(45deg, var(--primary-dark), var(--primary));
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(98, 0, 234, 0.3);
+        }
+        
+        .mood-section {
+            text-align: center;
+            margin: 50px auto 30px;
+            max-width: 1100px;
+        }
+        
+        .mood-title {
+            display: inline-block;
+            background: var(--bg-card);
+            padding: 15px 30px;
+            border-radius: 50px;
+            box-shadow: 0 5px 15px var(--shadow-color);
+            margin-bottom: 40px;
+            font-size: 1.2rem;
+        }
+        
+        .mood-name {
+            color: var(--primary);
+            font-weight: 700;
+            font-size: 1.3rem;
+        }
+        
+        .songs-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 30px;
+            margin: 0 auto;
+        }
+        
+        .song-card {
+            background: var(--bg-card);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px var(--shadow-color);
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .song-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 15px 35px var(--shadow-hover);
+        }
+        
+        .song-img-container {
+            position: relative;
+            overflow: hidden;
+            padding-top: 100%;
+        }
+        
+        .song-img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        
+        .song-card:hover .song-img {
+            transform: scale(1.05);
+        }
+        
+        .song-info {
+            padding: 20px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .song-name {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--text-primary);
+        }
+        
+        .audio-player-container {
+            margin-top: auto;
+        }
+        
+        .audio-player {
+            width: 100%;
+            height: 40px;
+            border-radius: 10px;
+            background: var(--primary-light);
+        }
+        
+        .empty-state {
+            text-align: center;
+            max-width: 700px;
+            margin: 60px auto;
+            background: var(--bg-card);
+            padding: 50px 40px;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px var(--shadow-color);
+        }
+        
+        .empty-icon {
+            font-size: 4rem;
+            color: var(--primary);
+            margin-bottom: 25px;
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+            100% { transform: translateY(0px); }
+        }
+        
+        .empty-text {
+            color: var(--text-secondary);
+            font-size: 1.3rem;
+            line-height: 1.7;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 70px;
+            padding: 25px;
+            color: var(--text-secondary);
+            font-size: 1rem;
+            border-top: 1px solid var(--border-color);
+        }
+        
+        .slider-icon {
+            margin-right: 10px;
+            color: var(--primary);
+        }
+        
+        .mood-icon {
+            font-size: 1.5rem;
+            margin-right: 10px;
+            color: var(--primary);
+            animation: beat 1.5s infinite;
+        }
+        
+        @keyframes beat {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .songs-container {
+                grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+            }
+            
+            .header {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .form-container {
+                padding: 30px 20px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .songs-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .logo {
+                font-size: 2.5rem;
+            }
+            
+            .form-title {
+                font-size: 1.5rem;
+            }
+            
+            .empty-state {
+                padding: 30px 20px;
+            }
+            
+            .empty-text {
+                font-size: 1.1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-left">
+                <div class="logo-container">
+                    <i class="fas fa-music logo-icon"></i>
+                    <h1 class="logo">MoodBeats</h1>
+                </div>
+                <p class="tagline">Your Bollywood Music Companion</p>
+            </div>
+            <div class="theme-toggle" id="theme-toggle">
+                <i class="fas fa-sun" id="sun-icon"></i>
+                <i class="fas fa-moon" id="moon-icon" style="display: none;"></i>
+            </div>
+        </div>
+        
+        <div class="cards-container">
+            <form method="POST" class="form-container">
+                <h2 class="form-title"><i class="fas fa-heart"></i> How are you feeling today?</h2>
+                
+                <div class="form-group">
+                    <label for="energy"><i class="fas fa-bolt slider-icon"></i>Energy Level</label>
+                    <div class="slider-container">
+                        <input type="range" min="1" max="10" step="0.1" name="energy" id="energy" value="5" oninput="updateValue('energy-value', this.value)" required>
+                        <div class="value-display">
+                            <i class="fas fa-battery-half value-display-icon" id="energy-icon"></i>
+                            <span id="energy-value">5.0</span>
+                        </div>
+                        <div class="range-values">
+                            <span>Low Energy</span>
+                            <span>High Energy</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="danceability"><i class="fas fa-compact-disc slider-icon"></i>Danceability</label>
+                    <div class="slider-container">
+                        <input type="range" min="1" max="10" step="0.1" name="danceability" id="danceability" value="5" oninput="updateValue('dance-value', this.value)" required>
+                        <div class="value-display">
+                            <i class="fas fa-walking value-display-icon" id="dance-icon"></i>
+                            <span id="dance-value">5.0</span>
+                        </div>
+                        <div class="range-values">
+                            <span>Just Listening</span>
+                            <span>Dance Party</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="valence"><i class="fas fa-smile slider-icon"></i>Positivity</label>
+                    <div class="slider-container">
+                        <input type="range" min="1" max="10" step="0.1" name="valence" id="valence" value="5" oninput="updateValue('valence-value', this.value); updateEmotionIcon(this.value)" required>
+                        <div class="value-display">
+                            <i class="fas fa-meh value-display-icon" id="emotion-icon"></i>
+                            <span id="valence-value">5.0</span>
+                        </div>
+                        <div class="range-values">
+                            <span>Melancholy</span>
+                            <span>Upbeat</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <button type="submit">Find My Perfect Songs <i class="fas fa-search"></i></button>
+            </form>
+        </div>
+        
+        {% if mood %}
+        <div class="mood-section">
+            <div class="mood-title">
+                <i class="fas fa-heart mood-icon"></i> Your Mood: <span class="mood-name">{{ mood }}</span>
+            </div>
+            
+            <div class="songs-container">
+                {% for song in songs %}
+                <div class="song-card">
+                    <div class="song-img-container">
+                        <img src="{{ song.image_url }}" alt="{{ song.name }}" class="song-img">
+                    </div>
+                    <div class="song-info">
+                        <div class="song-name">{{ song.name }}</div>
+                        <div class="audio-player-container">
+                            <audio controls class="audio-player">
+                                <source src="{{ song.audio_url }}" type="audio/mpeg">
+                                Your browser does not support the audio element.
+                            </audio>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <div class="empty-icon">
+                <i class="fas fa-headphones-alt"></i>
+            </div>
+            <p class="empty-text">Share your mood by adjusting the sliders above, and we'll recommend Bollywood songs that match your current vibe!</p>
+        </div>
+        {% endif %}
+        
+        <footer>
+            MoodBeats - Bollywood Edition © 2025 | Your AI-powered music companion
+        </footer>
+    </div>
+    
+    <script>
+        // Theme toggle functionality
+        const themeToggle = document.getElementById('theme-toggle');
+        const sunIcon = document.getElementById('sun-icon');
+        const moonIcon = document.getElementById('moon-icon');
+        
+        // Check for saved theme preference or use preferred color scheme
+        const savedTheme = localStorage.getItem('theme');
+        const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        
+        if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+            document.documentElement.setAttribute('data-theme', 'dark');
+            sunIcon.style.display = 'none';
+            moonIcon.style.display = 'block';
+        }
+        
+        // Theme toggle click handler
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            
+            if (currentTheme === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'light');
+                sunIcon.style.display = 'block';
+                moonIcon.style.display = 'none';
+                localStorage.setItem('theme', 'light');
+            } else {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                sunIcon.style.display = 'none';
+                moonIcon.style.display = 'block';
+                localStorage.setItem('theme', 'dark');
+            }
+        });
+        
+        // Update slider values
+        function updateValue(elementId, value) {
+            document.getElementById(elementId).textContent = parseFloat(value).toFixed(1);
+            
+            // Update energy icon based on value
+            if (elementId === 'energy-value') {
+                const energyIcon = document.getElementById('energy-icon');
+                if (value < 3) {
+                    energyIcon.className = 'fas fa-battery-empty value-display-icon';
+                } else if (value < 5) {
+                    energyIcon.className = 'fas fa-battery-quarter value-display-icon';
+                } else if (value < 7) {
+                    energyIcon.className = 'fas fa-battery-half value-display-icon';
+                } else if (value < 9) {
+                    energyIcon.className = 'fas fa-battery-three-quarters value-display-icon';
+                } else {
+                    energyIcon.className = 'fas fa-battery-full value-display-icon';
+                }
+            }
+            
+            // Update dance icon based on value
+            if (elementId === 'dance-value') {
+                const danceIcon = document.getElementById('dance-icon');
+                if (value < 3) {
+                    danceIcon.className = 'fas fa-couch value-display-icon';
+                } else if (value < 5) {
+                    danceIcon.className = 'fas fa-walking value-display-icon';
+                } else if (value < 7) {
+                    danceIcon.className = 'fas fa-running value-display-icon';
+                } else if (value < 9) {
+                    danceIcon.className = 'fas fa-compact-disc value-display-icon';
+                } else {
+                    danceIcon.className = 'fas fa-dancing value-display-icon';
+                }
+            }
+        }
+        
+        // Update emotion icon based on positivity value
+        function updateEmotionIcon(value) {
+            const emotionIcon = document.getElementById('emotion-icon');
+            if (value < 3) {
+                emotionIcon.className = 'fas fa-sad-tear value-display-icon';
+            } else if (value < 5) {
+                emotionIcon.className = 'fas fa-frown value-display-icon';
+            } else if (value < 7) {
+                emotionIcon.className = 'fas fa-meh value-display-icon';
+            } else if (value < 9) {
+                emotionIcon.className = 'fas fa-smile value-display-icon';
+            } else {
+                emotionIcon.className = 'fas fa-grin-stars value-display-icon';
+            }
+        }
+        
+        // Initialize slider icons
+        updateValue('energy-value', document.getElementById('energy').value);
+        updateValue('dance-value', document.getElementById('danceability').value);
+        updateValue('valence-value', document.getElementById('valence').value);
+        updateEmotionIcon(document.getElementById('valence').value);
+    </script>
+</body>
+</html>
